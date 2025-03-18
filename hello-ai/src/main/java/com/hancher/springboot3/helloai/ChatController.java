@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/ai/chat")
@@ -26,7 +27,11 @@ public class ChatController {
 
     @GetMapping("/generate")
     public Map generate(@RequestParam(value = "message", defaultValue = "Tell me a joke") String message) {
-        return Map.of("generation", this.chatModel.call(message));
+        String uuid = UUID.randomUUID().toString();
+        System.out.printf("uid=%s, message: %s%n", uuid, message);
+        String res = this.chatModel.call(message);
+        System.out.printf("uid=%s, message: %s%n", uuid, res);
+        return Map.of("generation", res);
     }
 
     @GetMapping("/generateStream")
