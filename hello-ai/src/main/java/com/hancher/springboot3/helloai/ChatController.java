@@ -25,6 +25,11 @@ public class ChatController {
         this.chatModel = chatModel;
     }
 
+    /**
+     * 阻塞式接口，可以使用普通的web框架，会等deepseek回答完成后一次性返回
+     * @param message 问题
+     * @return
+     */
     @GetMapping("/generate")
     public Map generate(@RequestParam(value = "message", defaultValue = "Tell me a joke") String message) {
         String uuid = UUID.randomUUID().toString();
@@ -33,7 +38,11 @@ public class ChatController {
         System.out.printf("uid=%s, message: %s%n", uuid, res);
         return Map.of("generation", res);
     }
-
+    /**
+     * 流式交互接口，会一个字一个字的返回数据，需要使用响应式web框架
+     * @param message 问题
+     * @return
+     */
     @GetMapping("/generateStream")
     public Flux<ChatResponse> generateStream(@RequestParam(value = "message", defaultValue = "Tell me a joke") String message) {
         Prompt prompt = new Prompt(new UserMessage(message));
